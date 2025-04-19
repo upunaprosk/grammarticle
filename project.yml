@@ -1,0 +1,65 @@
+title: "Grammarticle"
+description: >
+  Grammar Checker for English article usage trained on Russian Error-Annotated Learner English Corpus (REALEC).
+
+vars:
+  config: "default"
+  lang: "en"
+  corpus: "realec"
+  train_name: "train"
+  dev_name: "dev"
+  package_name: "grammarticle"
+  package_version: "1.0.0"
+  gpu: 0
+  seed: 42
+
+directories: ["training", "packages", "configs"]
+
+assets:
+  - dest: '${vars.corpus}/train.spacy'
+workflows:
+  all:
+    - train
+    - evaluate
+    - package
+    - clean
+commands:
+  - name: "train"
+    help: "Train the article checker"
+    script:
+      - >-
+        python -m spacy train configs/config.cfg --output training/ 
+        --paths.train '${vars.corpus}/train.spacy' --paths.dev '${vars.corpus}/dev.spacy'
+        --gpu-id ${vars.gpu}
+        --system.seed ${vars.seed}
+    deps:
+      - "configs/config.cfg"
+      - '${vars.corpus}/train.spacy'
+      - '${vars.corpus}/dev.spacy'
+    outputs:
+      - "training/model-best"
+  - name: "evaluate"
+    help: "Evaluate the model and export metrics"
+    script:
+      - "python -m spacy evaluate training/model-best '${vars.corpus}/dev.spacy' --output training/metrics.json"
+    deps:
+      - '${vars.corpus}/dev.spacy'
+      - "training/model-best"
+    outputs:
+      - "training/metrics.json"
+
+  - name: package
+    help: "Package the trained model as a pip package"
+    script:
+      - "python -m spacy package training/model-best packages --name ${vars.package_name} --version ${vars.package_version} --force --build wheel"
+    deps:
+      - "training/model-best"
+    outputs_no_cache:
+      - "packages/${vars.lang}_${vars.package_name}-${vars.package_version}/dist/${vars.lang}_${vars.package_name}-${vars.package_version}.tar.gz"
+
+  - name: clean
+    help: "Remove intermediary directories"
+    script:
+      - "rm -rf corpus/*"
+      - "rm -rf training/*"
+      - "rm -rf metrics/*"

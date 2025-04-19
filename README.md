@@ -1,19 +1,15 @@
-<img src="logo.png" alt="GrammArticle Logo" width="120"/> 
+# Grammarticle
 
-# Grammarticle 
+<img src="logo.png" alt="GrammArticle Logo" width="150" align="right" /></a>
 
 
+GrammArticle is a RoBERTa-based grammar checker for English article usage. It detects three types of article errors:
 
-**GrammArticle** is a roberta-based grammar checker for English article usage.  
-The model classifies **three types of article errors**:
+1) Missing – when an article is absent but required
+2) Wrong – when an incorrect article is used (e.g., "a apple" instead of "an apple", or "the" instead of "a/an")
+3) Redundant – when an article is unnecessary (e.g., "the furniture")
 
-1. **Missing** – when an article is absent but required  
-2. **Wrong** – when an incorrect article is used (e.g., "a apple" instead of "an apple", "the" instead of "a/an")  
-3. **Redundant** – when an article is unnecessary (e.g., "the furniture")
 
-![Example Output](example.png)
-
-___
 
 ## Installation
 
@@ -39,4 +35,8 @@ for span in doc.spans.get("sc", []):
     print(f"[{span.label_}] {span.text}")
 ```
 
+___
 
+![Example Output](example.png)
+
+___

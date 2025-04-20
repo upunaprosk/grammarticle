@@ -1,75 +1,41 @@
-#!/usr/bin/env python
-import io
-import json
-from os import path, walk
-from shutil import copy
-from setuptools import setup
+from setuptools import setup, find_packages
 
+with open("README.md", encoding="utf-8") as f:
+    long_description = f.read()
 
-def load_meta(fp):
-    with io.open(fp, encoding='utf8') as f:
-        return json.load(f)
-
-
-def load_readme(fp):
-    if path.exists(fp):
-        with io.open(fp, encoding='utf8') as f:
-            return f.read()
-    return ""
-
-
-def list_files(data_dir):
-    output = []
-    for root, _, filenames in walk(data_dir):
-        for filename in filenames:
-            if not filename.startswith('.'):
-                output.append(path.join(root, filename))
-    output = [path.relpath(p, path.dirname(data_dir)) for p in output]
-    output.append('meta.json')
-    return output
-
-
-def list_requirements(meta):
-    # Up to version 3.7, we included the parent package
-    # in requirements by default. This behaviour is removed
-    # in 3.8, with a setting to include the parent package in
-    # the requirements list in the meta if desired.
-    requirements = []
-    if 'setup_requires' in meta:
-        requirements += meta['setup_requires']
-    if 'requirements' in meta:
-        requirements += meta['requirements']
-    return requirements
-
-
-def setup_package():
-    root = path.abspath(path.dirname(__file__))
-    meta_path = path.join(root, 'meta.json')
-    meta = load_meta(meta_path)
-    readme_path = path.join(root, 'README.md')
-    readme = load_readme(readme_path)
-    model_name = str(meta['lang'] + '_' + meta['name'])
-    model_dir = path.join(model_name, model_name + '-' + meta['version'])
-
-    copy(meta_path, path.join(model_name))
-    copy(meta_path, model_dir)
-
-    setup(
-        name=model_name,
-        description=meta.get('description'),
-        long_description=readme,
-        author=meta.get('author'),
-        author_email=meta.get('email'),
-        url=meta.get('url'),
-        version=meta['version'],
-        license=meta.get('license'),
-        packages=[model_name],
-        package_data={model_name: list_files(model_dir)},
-        install_requires=list_requirements(meta),
-        zip_safe=False,
-        entry_points={'spacy_models': ['{m} = {m}'.format(m=model_name)]}
-    )
-
-
-if __name__ == '__main__':
-    setup_package()
+setup(
+    name="grammarticle",
+    version="1.0.0",
+    description="Grammarticle spaCy pipeline",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    author="upunaprosk",
+    author_email="",
+    url="https://github.com/upunaprosk/grammarticle",
+    license="MIT",
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
+    include_package_data=False,
+    install_requires=[
+        "spacy>=3.8.5,<3.9.0",
+        "spacy-transformers>=1.3.8,<1.4.0",
+        "spacy-huggingface-hub==0.0.10"
+    ],
+    entry_points={
+        "spacy_pipelines": [
+            "grammarticle = grammarticle.loader:load_model"
+        ]
+    },
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Operating System :: OS Independent"
+    ],
+    python_requires=">=3.7",
+)

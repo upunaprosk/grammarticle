@@ -1,7 +1,6 @@
 # Grammarticle
 
-<img src="logo.png" alt="GrammArticle Logo" width="150" align="right" /></a>
-
+<img src="https://raw.githubusercontent.com/upunaprosk/grammarticle/master/logo.png" alt="GrammArticle Logo" width="150" align="right" />
 
 GrammArticle is a RoBERTa-based grammar checker for English article usage. It detects three types of article errors:
 
@@ -13,8 +12,11 @@ GrammArticle is a RoBERTa-based grammar checker for English article usage. It de
 
 ## Installation
 
-GrammArticle is trained on publicly available grammatical error correction (GEC) datasets with synthetic augmentation and is available as a SpaCy pipeline.
+GrammArticle is trained on publicly available GEC datasets with synthetic augmentation and is available as a SpaCy pipeline.
 
+`pip install grammarticle`
+
+or
 
 ```bash
 pip install spacy-transformers
@@ -37,6 +39,7 @@ for span in doc.spans.get("sc", []):
 
 ___
 
-![Example Output](example.png)
+
+![Example Output](https://raw.githubusercontent.com/upunaprosk/grammarticle/master/example.png)
 
 ___

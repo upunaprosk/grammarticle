@@ -28,15 +28,18 @@ pip install https://huggingface.co/iproskurina/en_grammarticle/resolve/main/en_g
 ## Usage
 
 ```
-import spacy
-import en_grammarticle
-nlp = en_grammarticle.load()
-text = "Some text"
+import grammarticle
+nlp = grammarticle.load()
+text = "This is sentence"
 doc = nlp(text)
 for span in doc.spans.get("sc", []): 
     print(f"[{span.label_}] {span.text}")
 ```
 
+Outputs:
+```
+[Missing] sentence
+```
 ___
 
 

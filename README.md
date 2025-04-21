@@ -42,6 +42,8 @@ Outputs:
 ```
 ___
 
+Easy-to-use examples can be found in the `/examples` folder:  
+`annotate_texts.py` for text annotation and `html_render.py` for HTML highlighting (see example below).
 
 ![Example Output](https://raw.githubusercontent.com/upunaprosk/grammarticle/master/example.png)
 
